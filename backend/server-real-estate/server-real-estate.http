@@ -1,0 +1,6 @@
+@server_real_estate_HostAddress = http://localhost:5205
+
+GET {{server_real_estate_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
