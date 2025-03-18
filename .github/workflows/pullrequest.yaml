@@ -1,0 +1,28 @@
+name: Pull Request Enforcement
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check_pull_request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: Check if push is from a Pull Request
+        run: |
+          # Get commit message
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          
+          # Check if commit was merged via PR
+          if [[ $COMMIT_MSG != *"Merge pull request"* ]]; then
+            echo "Error: Direct pushes to main branch are not allowed."
+            echo "Please create a pull request instead."
+            exit 1
+          fi
+        shell: bash
+
