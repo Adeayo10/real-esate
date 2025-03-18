@@ -167,3 +167,4 @@ C:\Users\Adesoji\Desktop\real-esate\backend\server-real-estate\bin\Debug\net9.0\
 C:\Users\Adesoji\Desktop\real-esate\backend\server-real-estate\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\Adesoji\Desktop\real-esate\backend\server-real-estate\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Adesoji\Desktop\real-esate\backend\server-real-estate\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Adesoji\Desktop\real-esate\backend\server-real-estate\obj\Debug\net9.0\server-real-estate.sourcelink.json
