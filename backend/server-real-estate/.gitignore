@@ -1,0 +1,61 @@
+# Ignore build outputs
+bin/
+obj/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore logs and temporary files
+*.log
+*.tlog
+*.tmp
+*.temp
+*.cache
+
+# Ignore Visual Studio Code workspace settings
+.vscode/
+
+# Ignore NuGet packages
+*.nupkg
+packages/
+.nuget/
+
+# Ignore Rider IDE files
+.idea/
+*.sln.iml
+
+# Ignore compiled DLLs and PDBs
+*.dll
+*.pdb
+
+# Ignore generated files
+*.generated.cs
+*.genruntimeconfig.cache
+
+# Ignore static web assets
+wwwroot/
+staticwebassets/
+
+# Ignore EF Core migrations metadata
+Migrations/
+
+# Ignore app settings
+appsettings.json
+appsettings.*.json
+
+# Ignore publish outputs
+publish/
+*.publishsettings
+
+# Ignore coverage reports
+coverage/
+*.coverage
+*.coveragexml
+
+# Ignore temporary files created by OS
+.DS_Store
+Thumbs.db
+desktop.ini
