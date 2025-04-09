@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using server_real_estate.Model;
-using server_real_estate.services;
+using server_real_estate.Services;
 
 namespace server_real_estate.Controllers;
 [ApiController]

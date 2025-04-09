@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using server_real_estate.Data;
-using server_real_estate.services;
 using server_real_estate.Services;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server_real_estate.Model;
 using server_real_estate.Data;
-using static server_real_estate.services.ListService;
+using static server_real_estate.Services.ListService;
 
-namespace server_real_estate.services;
+namespace server_real_estate.Services;
 
 public class ListService : IListService
 {
