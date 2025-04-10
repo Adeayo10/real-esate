@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IRealEstatateDbContext, RealEstateDbContext>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IListService, ListService>();
 builder.Services.AddSingleton<ITokenService, TokenService>();
 
 builder.Services.AddControllers();
