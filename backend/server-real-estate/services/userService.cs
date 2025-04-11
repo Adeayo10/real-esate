@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using server_real_estate.Model;
-using server_real_estate.Data;
+using server_real_estate.Database;
 
 namespace server_real_estate.Services;
 public class UserService : IUserService
@@ -40,7 +40,7 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<Result<User>> CreateUserAsync(UserDto user)
+    public async Task<Result<User>> CreateUserAsync(RegisterRequest user)
     {
         try
         {
@@ -63,7 +63,7 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<Result<bool>> UpdateUserAsync(Guid id, UserDto updatedUser)
+    public async Task<Result<bool>> UpdateUserAsync(Guid id, RegisterRequest updatedUser)
     {
         try
         {
@@ -105,7 +105,7 @@ public interface IUserService
 {
     Task<Result<User>> GetUserByIdAsync(Guid id);
     Task<Result<List<User>>> GetAllUsersAsync();
-    Task<Result<User>> CreateUserAsync(UserDto user);
-    Task<Result<bool>> UpdateUserAsync(Guid id, UserDto updatedUser);
+    Task<Result<User>> CreateUserAsync(RegisterRequest user);
+    Task<Result<bool>> UpdateUserAsync(Guid id, RegisterRequest updatedUser);
     Task<Result<bool>> DeleteUserAsync(Guid id);
 }
