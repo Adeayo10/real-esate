@@ -1,10 +1,26 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using server_real_estate.Data;
+using server_real_estate.Database;
+using server_real_estate.Extensions;
 using server_real_estate.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication()
+.AddCookie(IdentityConstants.ApplicationScheme)
+.AddBearerToken(IdentityConstants.BearerScheme);
+
+builder.Services.AddIdentityCore<User>()
+.AddEntityFrameworkStores<RealEstateDbContext>()
+.AddSignInManager<SignInManager<User>>()
+.AddDefaultTokenProviders()
+.AddApiEndpoints();
+
+
+
 builder.Services.AddScoped<IRealEstatateDbContext, RealEstateDbContext>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IListService, ListService>();
@@ -39,9 +55,13 @@ if (app.Environment.IsDevelopment())
         }
 
     );
+    app.ApplyMigration();
 }
 
 app.UseHttpsRedirection();
+
+app.MapGroup("/api").MapIdentityApi<User>();
+
 
 app.UseAuthorization();
 
