@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using server_real_estate.Model;
 using server_real_estate.Services;
+using server_real_estate.Database;
 
 namespace server_real_estate.Controllers;
 
@@ -58,7 +56,7 @@ public class UserController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<User>> CreateUser([FromBody] UserDto userDto)
+    public async Task<ActionResult<User>> CreateUser([FromBody] RegisterRequest userDto)
     {
         try
         {
@@ -78,7 +76,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserDto userDto)
+    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] RegisterRequest userDto)
     {
         try
         {
