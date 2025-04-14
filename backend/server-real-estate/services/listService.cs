@@ -86,6 +86,7 @@ public class ListService : IListService
                 return Result<bool>.Fail("Property not found.");
             }
             _context.Properties.Remove(property);
+            _context.SaveChanges();
             return Result<bool>.Ok(true, "Property deleted successfully.");
         }
         catch (Exception ex)
@@ -112,6 +113,27 @@ public class ListService : IListService
             return Result<List<Property>>.Fail($"Error searching properties: {ex.Message}");
         }
     }
+
+    public async Task<Result<List<Property>>> sortProperty(string sortValue)
+    {
+        try
+        {
+            var properties = await _context.Properties.ToListAsync();
+            if (sortValue == "asc")
+            {
+                properties = properties.OrderBy(p => p.Price).ToList();
+            }
+            else if (sortValue == "desc")
+            {
+                properties = properties.OrderByDescending(p => p.Price).ToList();
+            }
+            return Result<List<Property>>.Ok(properties, "Properties sorted successfully.");
+        }
+        catch (Exception ex)
+        {
+            return Result<List<Property>>.Fail($"Error sorting properties: {ex.Message}");
+        }
+    }
 }
 
 
@@ -123,4 +145,5 @@ public interface IListService
     Task<Result<bool>> UpdatePropertyAsync(int id, Property updatedProperty);
     Task<Result<bool>> DeletePropertyAsync(int id);
     Task<Result<List<Property>>> SearchPropertyAsync(string searchTerm);
+    Task<Result<List<Property>>> sortProperty(string sortValue);
 }
