@@ -90,7 +90,7 @@ public class ListController : ControllerBase
             {
                 return NotFound($"Property with ID {id} not found.");
             }
-            return Ok();
+            return Ok("Property Deleted");
         }
         catch (Exception ex)
         {
@@ -105,6 +105,20 @@ public class ListController : ControllerBase
         try
         {
             var properties = await _listService.SearchPropertyAsync(search);
+            return Ok(properties);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpGet("sort")]
+    public async Task<IActionResult> sortProperty(string sortValue)
+    {
+        try
+        {
+            var properties = await _listService.sortProperty(sortValue);
             return Ok(properties);
         }
         catch (Exception ex)
