@@ -68,6 +68,9 @@ body {
   text-align: center;
 }
 
+.buttonpadding{
+  margin-top: 10px;
+}
 .listing-cards,
 .review-cards {
   display: flex;
@@ -98,6 +101,9 @@ body {
 
 .card h3, .card p {
   margin: 10px 0;
+  color: black;
+  text-align: center;
+  
 }
 
 .touch-card {

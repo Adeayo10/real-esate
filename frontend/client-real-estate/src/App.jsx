@@ -44,8 +44,6 @@ const Home = ({ user, handleLogout }) => {
                     <button onClick={() => window.location.href = "/login"}>Sign Up / Login</button>
                 )}
             </nav>
-
-            {/* Hero Section */}
             <header className="hero">
                 <h1>Find Your Dream Home Today!</h1>
                 <p>Browse thousands of properties with ease.</p>
@@ -63,10 +61,10 @@ const Home = ({ user, handleLogout }) => {
                     <button>Search</button>
                 </div>
             </header>
-
-            {/* Explore Listings */}
             <section className="listings">
-                <h2>Explore Available Listings</h2>
+            <h2 style={{ marginBottom: '10px' }}>Explore Available Listings</h2>
+
+
                 <div className="listing-cards">
                     <div className="card">
                         <img src={property1} alt="Dublin Apartment" />
@@ -83,13 +81,17 @@ const Home = ({ user, handleLogout }) => {
                         <h3>2 BHK Apartment in Galway</h3>
                         <p>$150,000</p>
                     </div>
+                    <div className="card">
+                        <img src={property3} alt="Galway Apartment" />
+                        <h3>2 BHK Apartment in Galway</h3>
+                        <p>$150,000</p>
+                    </div>
                 </div>
                 <Link to="/property-listing">
-                    <button>See more...</button>
+                    <button class="buttonpadding">See more...</button>
                 </Link>
             </section>
 
-            {/* About Us */}
            
             <section className="about">
                 <h2>About Us</h2>
@@ -99,7 +101,7 @@ const Home = ({ user, handleLogout }) => {
             </section>
 
             <section className="propertyType">
-                <h2>Find Your Perfect Property Type</h2>
+                <h2 style={{marginBottom:10}}>Find Your Perfect Property Type</h2>
                 <div className="listing-cards">
                     <button className="card touch-card">
                         <img src={property1} alt="Town House" />
@@ -117,7 +119,7 @@ const Home = ({ user, handleLogout }) => {
             </section>
 
             <section className="reviews">
-                <h2>What Our Happy Clients Say</h2>
+                <h2 style={{ marginBottom: '10px' }}>What Our Happy Clients Say</h2>
                 <div className="review-cards">
                     <div className="reviewCard">
                         <div className="review-profile"></div>
@@ -142,9 +144,6 @@ const Home = ({ user, handleLogout }) => {
                 </div>
             </section>
 
-
-
-            {/* Footer */}
             <footer className="footer">
                 <p>© 2025 Property Listing. All rights reserved.</p>
                 <div className="footer-links">

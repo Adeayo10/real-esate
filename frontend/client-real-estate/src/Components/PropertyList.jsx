@@ -27,31 +27,69 @@ const properties = [
 const PropertyList = () => {
     const [filteredProperties, setFilteredProperties] = useState(properties);
     const [sortOption, setSortOption] = useState('price');
-    const [sortOrder, setSortOrder] = useState('asc');  
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedType, setSelectedType] = useState('all');
 
     const handleSortChange = (e) => {
         const option = e.target.value;
         setSortOption(option);
+        let newSortOrder = sortOrder;
+        if (option === 'price') {
+            newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+        }
 
+        setSortOrder(newSortOrder);  
+        sortProperties(option, newSortOrder); 
+    };
+
+    const sortProperties = (option, order) => {
         let sortedProperties = [...filteredProperties];
         if (option === 'price') {
-            sortedProperties = sortedProperties.sort((a, b) => a.price - b.price);
-        } else if (option === 'location') {
-            sortedProperties = sortedProperties.sort((a, b) => a.location.localeCompare(b.location));
+            sortedProperties = sortedProperties.sort((a, b) => (order === 'asc' ? a.price - b.price : b.price - a.price));
         } else if (option === 'type') {
             sortedProperties = sortedProperties.sort((a, b) => a.type.localeCompare(b.type));
         }
 
-        if (sortOrder === 'desc') {
-            sortedProperties = sortedProperties.reverse(); 
-        }
-
-        setFilteredProperties(sortedProperties);
+        setFilteredProperties(sortedProperties); 
     };
 
-    const handleSortOrderChange = (e) => {
-        setSortOrder(e.target.value);
-        handleSortChange(e);  
+    const handleSearch = (e) => {
+        const term = e.target.value.toLowerCase();
+        setSearchTerm(term);
+        
+        const filtered = properties.filter(property => {
+            return (
+                property.name.toLowerCase().includes(term) ||
+                property.price.toString().includes(term) ||
+                property.type.toLowerCase().includes(term)
+            );
+        });
+
+        if (selectedType !== 'all') {
+            setFilteredProperties(filtered.filter(property => property.type.toLowerCase() === selectedType));
+        } else {
+            setFilteredProperties(filtered);
+        }
+    };
+
+    const handleTypeChange = (e) => {
+        const type = e.target.value;
+        setSelectedType(type);
+
+        const filtered = properties.filter(property => {
+            return (
+                property.name.toLowerCase().includes(searchTerm) ||
+                property.price.toString().includes(searchTerm) ||
+                property.type.toLowerCase().includes(searchTerm)
+            );
+        });
+
+        if (type !== 'all') {
+            setFilteredProperties(filtered.filter(property => property.type.toLowerCase() === type));
+        } else {
+            setFilteredProperties(filtered);
+        }
     };
 
     return (
@@ -59,48 +97,39 @@ const PropertyList = () => {
             <div className="sidebar">
                 <h3>Sort By</h3>
                 <div className="sort-option">
-                    <label>Price</label>
+                    <label>Price Low to High</label>
                     <input
                         type="radio"
                         value="price"
-                        checked={sortOption === 'price'}
+                        checked={sortOption === 'price' && sortOrder === 'asc'}
                         onChange={handleSortChange}
                     />
                 </div>
                 <div className="sort-option">
-                    <label>Location</label>
+                    <label>Price High to Low</label>
                     <input
                         type="radio"
-                        value="location"
-                        checked={sortOption === 'location'}
-                        onChange={handleSortChange}
-                    />
-                </div>
-                <div className="sort-option">
-                    <label>Type</label>
-                    <input
-                        type="radio"
-                        value="type"
-                        checked={sortOption === 'type'}
+                        value="price"
+                        checked={sortOption === 'price' && sortOrder === 'desc'}
                         onChange={handleSortChange}
                     />
                 </div>
 
-                <h4>Order</h4>
-                <div className="sort-order">
-                    <label>Ascending</label>
+                <h4>Filter by Type</h4>
+                <select onChange={handleTypeChange} value={selectedType}>
+                    <option value="all">All Types</option>
+                    <option value="apartment">Apartment</option>
+                    <option value="villa">Villa</option>
+                    <option value="house">House</option>
+                    <option value="townhouse">Townhouse</option>
+                </select>
+
+                <div className="search-bar2">
                     <input
-                        type="radio"
-                        value="asc"
-                        checked={sortOrder === 'asc'}
-                        onChange={handleSortOrderChange}
-                    />
-                    <label>Descending</label>
-                    <input
-                        type="radio"
-                        value="desc"
-                        checked={sortOrder === 'desc'}
-                        onChange={handleSortOrderChange}
+                        type="text"
+                        placeholder="Search by address, price, or type"
+                        value={searchTerm}
+                        onChange={handleSearch}
                     />
                 </div>
             </div>
