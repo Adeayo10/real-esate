@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server_real_estate.Model;
 using server_real_estate.Data;
-using static server_real_estate.Services.ListService;
+
+
 
 namespace server_real_estate.Services;
 
@@ -14,11 +15,17 @@ public class ListService : IListService
         _context = context;
         _logger = logger;
     }
-    public async Task<Result<List<Property>>> GetAllPropertiesAsync()
+    public async Task<Result<List<Property>>> GetAllPropertiesAsync(int pageNumber,int pageSize)
     {
         try
         {
-            var properties = await _context.Properties.ToListAsync();
+            int totalProperties = await _context.Properties.CountAsync();
+            var properties = await _context.Properties.OrderBy(x=>x.Id).Skip((pageNumber-1)*pageSize).Take(pageSize).ToListAsync();
+            var result = new pageResult<Property>
+            {
+                items = properties,
+                totalItems = totalProperties
+            };
             return Result<List<Property>>.Ok(properties, "Properties retrieved successfully.");
         }
         catch (Exception ex)
@@ -139,7 +146,7 @@ public class ListService : IListService
 
 public interface IListService
 {
-    Task<Result<List<Property>>> GetAllPropertiesAsync();
+    Task<Result<List<Property>>> GetAllPropertiesAsync(int pageNumber,int pageSize);
     Task<Result<Property>> GetPropertyByIdAsync(int id);
     Task<Result<Property>> CreatePropertyAsync(Property property);
     Task<Result<bool>> UpdatePropertyAsync(int id, Property updatedProperty);

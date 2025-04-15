@@ -8,17 +8,18 @@ namespace server_real_estate.Controllers;
 public class ListController : ControllerBase
 {
     private readonly IListService _listService;
+ 
     public ListController(IListService listService)
     {
         _listService = listService;
     }
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<Property>>> GetAllProperties()
+    public async Task<ActionResult<IEnumerable<Property>>> GetAllProperties([FromQuery] int pageNumber,[FromQuery] int pageSize)
     {
         try
         {
-            var properties = await _listService.GetAllPropertiesAsync();
+            var properties = await _listService.GetAllPropertiesAsync(pageNumber,pageSize);
             return Ok(properties);
         }
         catch (Exception ex)
