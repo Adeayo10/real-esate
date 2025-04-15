@@ -6,6 +6,10 @@ public class SuccessResponse
     public bool IsSuccessful { get; init; }
     public string StatusCode { get; init; }
     public string Token { get; init; } // Optional token
+    public DateTime? Expires { get; init; } // Optional expiration date
+    public string TokenType { get; init; } // Optional token type (e.g., Bearer)
+    public string RefreshToken { get; init; } // Optional refresh token
+    
 }
 
 public class ErrorResponse 

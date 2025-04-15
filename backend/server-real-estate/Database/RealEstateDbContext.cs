@@ -12,6 +12,8 @@ public class RealEstateDbContext : IdentityDbContext<User>, IRealEstatateDbConte
     }
 
     public DbSet<Property> Properties { get; set; }
+
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     public override DbSet<User> Users { get; set; }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -36,6 +38,7 @@ public class RealEstateDbContext : IdentityDbContext<User>, IRealEstatateDbConte
     // Map entities to tables
     modelBuilder.Entity<Property>().ToTable("Properties");
     modelBuilder.Entity<User>().ToTable("Users", "dbo"); // Explicitly map Users to dbo schema
+    modelBuilder.Entity<RefreshToken>().ToTable("RefreshTokens", "dbo"); // Explicitly map RefreshTokens to dbo schema
 
     // Set default schema
     modelBuilder.HasDefaultSchema("dbo");
@@ -51,8 +54,9 @@ public interface IRealEstatateDbContext
 {
     DbSet<Property> Properties { get; set; }
     DbSet<User> Users { get; set; }
-
+    DbSet<RefreshToken> RefreshTokens { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     int SaveChanges();
     EntityEntry Entry(object entity);
+    
 }
