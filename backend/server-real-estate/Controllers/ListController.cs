@@ -15,7 +15,7 @@ public class ListController : ControllerBase
     }
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<Property>>> GetAllProperties(int pageNumber=1,int pageSize=3)
+    public async Task<ActionResult<IEnumerable<Property>>> GetAllProperties([FromQuery] int pageNumber=1,[FromQuery] int pageSize=3)
     {
         try
         {
