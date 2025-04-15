@@ -1,4 +1,4 @@
-﻿namespace server_real_estate.Models.Property;
+﻿namespace server_real_estate.Model;
 
 public class pageResult<T>
 {

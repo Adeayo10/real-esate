@@ -2,7 +2,7 @@
 using server_real_estate.Model;
 using server_real_estate.Data;
 using static server_real_estate.Services.ListService;
-using server_real_estate.Models.Property;
+
 
 namespace server_real_estate.Services;
 
