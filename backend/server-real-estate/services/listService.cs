@@ -2,7 +2,6 @@
 using server_real_estate.Model;
 using server_real_estate.Database;
 
-
 namespace server_real_estate.Services;
 
 public class ListService : IListService
@@ -14,11 +13,17 @@ public class ListService : IListService
         _context = context;
         _logger = logger;
     }
-    public async Task<Result<List<Property>>> GetAllPropertiesAsync()
+    public async Task<Result<List<Property>>> GetAllPropertiesAsync(int pageNumber,int pageSize)
     {
         try
         {
-            var properties = await _context.Properties.ToListAsync();
+            int totalProperties = await _context.Properties.CountAsync();
+            var properties = await _context.Properties.OrderBy(x=>x.Id).Skip((pageNumber-1)*pageSize).Take(pageSize).ToListAsync();
+            var result = new pageResult<Property>
+            {
+                items = properties,
+                totalItems = totalProperties
+            };
             return Result<List<Property>>.Ok(properties, "Properties retrieved successfully.");
         }
         catch (Exception ex)
@@ -86,6 +91,7 @@ public class ListService : IListService
                 return Result<bool>.Fail("Property not found.");
             }
             _context.Properties.Remove(property);
+            _context.SaveChanges();
             return Result<bool>.Ok(true, "Property deleted successfully.");
         }
         catch (Exception ex)
@@ -112,15 +118,37 @@ public class ListService : IListService
             return Result<List<Property>>.Fail($"Error searching properties: {ex.Message}");
         }
     }
+
+    public async Task<Result<List<Property>>> sortProperty(string sortValue)
+    {
+        try
+        {
+            var properties = await _context.Properties.ToListAsync();
+            if (sortValue == "asc")
+            {
+                properties = properties.OrderBy(p => p.Price).ToList();
+            }
+            else if (sortValue == "desc")
+            {
+                properties = properties.OrderByDescending(p => p.Price).ToList();
+            }
+            return Result<List<Property>>.Ok(properties, "Properties sorted successfully.");
+        }
+        catch (Exception ex)
+        {
+            return Result<List<Property>>.Fail($"Error sorting properties: {ex.Message}");
+        }
+    }
 }
 
 
 public interface IListService
 {
-    Task<Result<List<Property>>> GetAllPropertiesAsync();
+    Task<Result<List<Property>>> GetAllPropertiesAsync(int pageNumber,int pageSize);
     Task<Result<Property>> GetPropertyByIdAsync(int id);
     Task<Result<Property>> CreatePropertyAsync(Property property);
     Task<Result<bool>> UpdatePropertyAsync(int id, Property updatedProperty);
     Task<Result<bool>> DeletePropertyAsync(int id);
     Task<Result<List<Property>>> SearchPropertyAsync(string searchTerm);
+    Task<Result<List<Property>>> sortProperty(string sortValue);
 }
