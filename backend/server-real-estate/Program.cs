@@ -42,6 +42,20 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = tokenValidationParameters;
     options.Events = new JwtBearerEvents
     {
+
+         OnAuthenticationFailed = context =>
+        {
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+            logger.LogError("Authentication failed: {Error}", context.Exception.Message);
+            return Task.CompletedTask;
+        },
+        OnChallenge = context =>
+        {
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+            logger.LogWarning("Token validation failed: {Error}", context.AuthenticateFailure?.Message);
+            return Task.CompletedTask;
+        },
+
         OnTokenValidated = async context =>
         {
             var tokenService = context.HttpContext.RequestServices.GetRequiredService<ITokenService>();
@@ -57,21 +71,7 @@ builder.Services.AddAuthentication(options =>
             }
         }
     };
-    options.Events = new JwtBearerEvents
-    {
-        OnAuthenticationFailed = context =>
-        {
-            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogError("Authentication failed: {Error}", context.Exception.Message);
-            return Task.CompletedTask;
-        },
-        OnChallenge = context =>
-        {
-            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogWarning("Token validation failed: {Error}", context.AuthenticateFailure?.Message);
-            return Task.CompletedTask;
-        }
-    };
+   
 })
 .AddCookie(IdentityConstants.ApplicationScheme);
 
