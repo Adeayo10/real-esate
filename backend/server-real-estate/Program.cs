@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +40,23 @@ builder.Services.AddAuthentication(options =>
 .AddJwtBearer(options =>
 {
     options.TokenValidationParameters = tokenValidationParameters;
+    options.Events = new JwtBearerEvents
+    {
+        OnTokenValidated = async context =>
+        {
+            var tokenService = context.HttpContext.RequestServices.GetRequiredService<ITokenService>();
+            var token = context.SecurityToken as JwtSecurityToken;
+
+            if (token != null)
+            {
+                var validationResult = await tokenService.ValidateToken(token.RawData);
+                if (!validationResult.Success)
+                {
+                    context.Fail(validationResult.Message); // Reject the token if validation fails
+                }
+            }
+        }
+    };
     options.Events = new JwtBearerEvents
     {
         OnAuthenticationFailed = context =>

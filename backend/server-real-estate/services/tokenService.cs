@@ -90,7 +90,7 @@ public class TokenService(
                 return Result<bool>.Fail("Token is invalid or outdated");
             }
 
-            if (tokenVersionClaim == null)
+            if (tokenVersionClaim == null || !int.TryParse(tokenVersionClaim, out var tokenVersion) || tokenVersion != user.TokenVersion)
             {
                 _logger.LogWarning("Token version mismatch for userId: {UserId}", userIdClaim);
                 return Result<bool>.Fail("Token is invalid or outdated");
@@ -190,7 +190,7 @@ public class TokenService(
     private async Task<string> CreateRefreshToken(string userId)
     {
         var refreshToken = GenerateRefreshToken();
-        var expiryDate = DateTime.UtcNow.AddDays(7);
+        var expiryDate = DateTime.UtcNow.AddDays(1); // Set the expiry date for the refresh token
 
         var newRefreshToken = new RefreshToken
         {

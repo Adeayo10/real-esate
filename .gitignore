@@ -11,6 +11,7 @@ obj/
 *.pfx
 *.publishsettings
 orleans.codegen.cs
+real-estate.sln
 
 # Build results
 [Dd]ebug/
