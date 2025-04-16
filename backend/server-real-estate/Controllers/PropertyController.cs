@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using server_real_estate.Data;
+using server_real_estate.Database;
 using server_real_estate.Model;
 
-namespace realEstate.Controllers;
+namespace server_real_estate.Controllers;
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class PropertyController : Controller
 {
     private readonly RealEstateDbContext _context;

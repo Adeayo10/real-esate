@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server_real_estate.Model;
-using server_real_estate.Data;
-
-
+using server_real_estate.Database;
 
 namespace server_real_estate.Services;
 
