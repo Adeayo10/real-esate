@@ -271,7 +271,7 @@ public class AuthController(SignInManager<User> signInManager, UserManager<User>
         }
 
         // Handle JWT token logout
-        // user.TokenVersion++;
+        user.TokenVersion++;
         await _userManager.UpdateAsync(user);
         await _tokenService.RevokeTokens(userId);
         _logger.LogInformation("User {UserId} logged out and tokens invalidated.", userId);
