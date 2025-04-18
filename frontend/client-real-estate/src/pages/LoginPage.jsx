@@ -24,9 +24,20 @@ const Login = () => {
     }
   }, [navigate]);
 
+  const validateInput = (input) => {
+    const regex = /^[a-zA-Z0-9@.]+$/; // Allow only alphanumeric characters, @, and .
+    return regex.test(input);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+
+    if (!validateInput(email) || !validateInput(password)) {
+      setError('Invalid input detected.');
+      toast.error('Invalid input detected.', TOAST_OPTIONS);
+      return;
+    }
 
     try {
       const loginData = { 

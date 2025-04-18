@@ -8,7 +8,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { TOAST_OPTIONS } from '../utils/constants';
 import { sendSMS } from '../utils/constants';
 
-
+const validateInput = (input) => {
+  const regex = /^[a-zA-Z0-9@.\s]+$/; // Allow only alphanumeric characters, @, ., and spaces
+  return regex.test(input);
+};
 
 const Register = () => {
   const navigate = useNavigate();
@@ -35,6 +38,14 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+
+    for (const key in formData) {
+      if (!validateInput(formData[key])) {
+        setError('Invalid input detected.');
+        toast.error('Invalid input detected.', TOAST_OPTIONS);
+        return;
+      }
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
