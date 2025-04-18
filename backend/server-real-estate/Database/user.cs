@@ -11,15 +11,16 @@ public class User : IdentityUser
         LastName = string.Empty;
         Password = string.Empty;
         Role = string.Empty;
-        
-
+        Address = string.Empty;
     }
 
     // public Guid Id { get; set; }
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? Password { get; set; }
-    public string? Role { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Password { get; set; }
+    public string Role { get; set; }
+    public string Address { get; set; }
+   
     
     public int TokenVersion {get; set;}
 }

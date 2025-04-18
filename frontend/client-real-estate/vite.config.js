@@ -19,7 +19,7 @@ export default defineConfig({
     //port: 7004,  // Client port
     proxy: {
       "/api": {
-        target: "http://localhost:5256", // Mock server port
+        target: "http://localhost:5205", // Mock server port
         changeOrigin: true,
         secure: false,
         ws: true,
@@ -32,7 +32,7 @@ export default defineConfig({
           });
           proxy.on("proxyRes", (proxyRes, req, _res) => {
             console.log(
-              "Received Response from the Target:",
+              "Received Response from the Target:", 
               proxyRes.statusCode,
               req.url
             );

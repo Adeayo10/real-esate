@@ -28,6 +28,9 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+      'no-unreachable': 'error', // Disallow unreachable code
+      'no-empty': ['error', { allowEmptyCatch: true }], // Disallow empty blocks
+      'no-constant-condition': ['error', { checkLoops: false }], // Disallow constant conditions
     },
   },
 ]
