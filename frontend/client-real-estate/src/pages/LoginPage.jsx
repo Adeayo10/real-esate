@@ -41,9 +41,14 @@ const Login = () => {
     const sanitizedEmail = sanitizeInput(email);
     const sanitizedPassword = sanitizeInput(password);
 
-    if (!validateInput(sanitizedEmail) || !validateInput(sanitizedPassword)) {
-      setError('Invalid input detected.');
-      toast.error('Invalid input detected.', TOAST_OPTIONS);
+    if (!validateEmail(sanitizedEmail)) {
+      setError('Invalid email format.');
+      toast.error('Invalid email format.', TOAST_OPTIONS);
+      return;
+    }
+    if (!validateInput(sanitizedPassword)) {
+      setError('Invalid password format.');
+      toast.error('Invalid password format.', TOAST_OPTIONS);
       return;
     }
 
