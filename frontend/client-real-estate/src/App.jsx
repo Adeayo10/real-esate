@@ -7,6 +7,8 @@ import ContactPage from './pages/ContactPage';
 import ListingPage from './pages/ListingPage';
 import RegisterPage from './pages/RegisterPage';
 import { renewAuthToken } from './api/auth';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css'; // Assuming you have a CSS file for styling
 
 const App = () => {
@@ -41,26 +43,29 @@ const App = () => {
   }, [isAuthenticated]); // Dependency array ensures minimal re-renders
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route
-          path="/login"
-          element={
-            isAuthenticated ? <Navigate to="/" /> : <Login />
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            isAuthenticated ? <Navigate to="/" /> : <RegisterPage />
-          }
-        />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/listings" element={<ListingPage />} />
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/login"
+            element={
+              isAuthenticated ? <Navigate to="/" /> : <Login />
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              isAuthenticated ? <Navigate to="/" /> : <RegisterPage />
+            }
+          />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/listings" element={<ListingPage />} />
+        </Routes>
+      </Router>
+      <ToastContainer />
+    </>
   );
 };
 

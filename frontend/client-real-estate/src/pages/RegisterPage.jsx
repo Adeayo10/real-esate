@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { TOAST_OPTIONS } from '../utils/constants';
+import { sendSMS } from '../utils/constants';
 
 
 
@@ -45,6 +46,18 @@ const Register = () => {
       const response = await registerUser(formData);
       console.log('Registration successful:', response);
       toast.success(response.message || "Registration successful", TOAST_OPTIONS);
+
+      
+      // Send SMS notification
+      // Ensure phoneNumber is in the correct format before sending SMS
+      
+      if (formData.phoneNumber) {
+       // let phoneNumber =  formatPhoneNumber(formData.phoneNumber);
+       console.log('Sending SMS to:', formData.phoneNumber); 
+       let response = await sendSMS(formData.phoneNumber, 'Welcome to Real Estate! Your registration was successful.');
+        toast.success(response.message || "SMS sent successfully", TOAST_OPTIONS);
+        console.log('SMS sent successfully:', response);
+      }
 
       startTokenRefresh(); // Start token refresh after successful registration
       navigate('/login');

@@ -9,9 +9,8 @@ export const setAccessToken = (token) => {
 
 // Function to get the access token from localStorage
 export const getAccessToken = () => {
-    return localStorage.getItem("accessToken");
-  };
-  
+  return localStorage.getItem("accessToken");
+};
 
 // Function to get the refresh token from localStorage
 export const getRefreshToken = () => {
@@ -67,7 +66,6 @@ export const monitorTokenExpiry = async () => {
       logoutUser();
     }
   }
-
 };
 
 export const isTokenValid = (token) => {
@@ -93,7 +91,9 @@ export const startTokenRefresh = () => {
   // Set interval to refresh the access token every 4 minutes
   refreshInterval = setInterval(async () => {
     try {
-      const response = await renewAuthToken({ refreshToken: refreshTokenValue });
+      const response = await renewAuthToken({
+        refreshToken: refreshTokenValue,
+      });
       localStorage.setItem("accessToken", response.token);
       localStorage.setItem("refreshToken", response.refreshToken);
       console.log("Access token refreshed successfully.");
@@ -109,5 +109,21 @@ export const stopTokenRefresh = () => {
   if (refreshInterval) {
     clearInterval(refreshInterval);
     refreshInterval = null;
+  }
+};
+
+export const getUserNameFromToken = () => {
+  const accessToken = getAccessToken();
+  if (!accessToken) {
+    console.warn('Access token not found in localStorage.');
+    return null;
+  }
+
+  const decodedToken = decodeAccessToken(accessToken);
+  if (decodedToken && decodedToken.name) {
+    return decodedToken.name; // Return the user name for further use if needed
+  } else {
+    console.error("Failed to decode access token or extract user name.");
+    return null;
   }
 };
