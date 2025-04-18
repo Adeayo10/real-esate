@@ -17,6 +17,10 @@ const apiRequest = async (endpoint, method, body = null, useAuth = false) => {
 
   if (useAuth) {
     let accessToken = getAccessToken();
+    if (!accessToken) {
+      console.warn('Access token not found in localStorage.');
+      return null;
+    }
 
     if (!isTokenValid(accessToken)) {
       console.warn(
@@ -89,7 +93,7 @@ export const loginUser = async (
     console.log("Cookies are being used for authentication");
   } else {
     localStorage.setItem("accessToken", data.token);
-    localStorage.setItem("refreshToken", data.refreshToken);
+    localStorage.setItem("refreshToken", data.refreshToken); 
   }
 
   return data;

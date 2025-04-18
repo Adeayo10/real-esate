@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { loginUser } from '../api/auth';
 import { startTokenRefresh } from '../utils/token'; // Assuming this function is defined in a separate file
 import '../Auth.css';
@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { TOAST_OPTIONS } from '../utils/constants';
-
+import { getAccessToken } from '../utils/token'; // Assuming this function is defined in a separate file
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,6 +14,15 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const accessToken = getAccessToken();
+    if (accessToken) {
+      console.warn('Access token found in localStorage. Redirecting to home.');
+      navigate('/');
+      return;
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,8 +37,7 @@ const Login = () => {
       const useBearerToken = true; // Always use bearer token
       const response = await loginUser({ ...loginData, useBearerToken });
       console.log('Login successful:', response);
-      toast.success(response.message || 'Login successful!',TOAST_OPTIONS);
-
+      toast.success(`${response.message} Welcome`, TOAST_OPTIONS);
       startTokenRefresh(); // Start token refresh after successful login
       
       setTimeout(() => {
