@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-// import LoginPage from './pages/LoginPage';
 import Login from './pages/LoginPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import ListingPage from './pages/ListingPage';
 import RegisterPage from './pages/RegisterPage';
 import { renewAuthToken } from './api/auth';
+import './App.css'; // Assuming you have a CSS file for styling
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

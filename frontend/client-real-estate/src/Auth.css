@@ -91,3 +91,21 @@ body {
 .auth-toggle a:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 30px 20px;
+  }
+
+  .auth-container h2 {
+    font-size: 24px;
+  }
+
+  .auth-form input {
+    font-size: 14px;
+  }
+
+  .auth-form button {
+    font-size: 14px;
+  }
+}
