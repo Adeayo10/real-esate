@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using server_real_estate.Model;
 using server_real_estate.Services;
+using server_real_estate.Database;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace server_real_estate.Controllers;
 
@@ -23,6 +23,10 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
     {
         try
@@ -40,7 +44,7 @@ public class UserController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<User>> GetUserById(Guid id)
+    public async Task<ActionResult<User>> GetUserById(string id)
     {
         try
         {
@@ -58,7 +62,7 @@ public class UserController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<User>> CreateUser([FromBody] UserDto userDto)
+    public async Task<ActionResult<User>> CreateUser([FromBody] RegisterRequest userDto)
     {
         try
         {
@@ -78,7 +82,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserDto userDto)
+    public async Task<IActionResult> UpdateUser(string id, [FromBody] RegisterRequest userDto)
     {
         try
         {
@@ -100,7 +104,7 @@ public class UserController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteUser(Guid id)
+    public async Task<IActionResult> DeleteUser(string id)
     {
         try
         {

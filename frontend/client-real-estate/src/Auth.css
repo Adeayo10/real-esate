@@ -1,0 +1,111 @@
+/* Updated styling for authentication pages to align with the application's theme */
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  background-color: #ffffff;
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.auth-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #007bff;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.auth-form input {
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.auth-form input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+
+.auth-form button {
+  padding: 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.auth-form button:hover {
+  background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+.auth-toggle {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.auth-toggle a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-toggle a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 30px 20px;
+  }
+
+  .auth-container h2 {
+    font-size: 24px;
+  }
+
+  .auth-form input {
+    font-size: 14px;
+  }
+
+  .auth-form button {
+    font-size: 14px;
+  }
+}
