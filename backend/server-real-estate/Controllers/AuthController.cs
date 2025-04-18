@@ -56,9 +56,11 @@ public class AuthController(SignInManager<User> signInManager, UserManager<User>
         {
             UserName = registerRequest.Email,
             Email = registerRequest.Email,
-            FirstName = registerRequest.FirstName?.Trim(),
-            LastName = registerRequest.LastName?.Trim(),
-            Role = string.IsNullOrWhiteSpace(registerRequest.Role) ? "User" : registerRequest.Role.Trim()
+            FirstName = registerRequest.FirstName!.Trim(),
+            LastName = registerRequest.LastName!.Trim(),
+            Role = string.IsNullOrEmpty(registerRequest.Role) ? "User" : registerRequest.Role.Trim(), 
+            Address = registerRequest.Address.Trim(),
+            PhoneNumber = registerRequest.PhoneNumber?.Trim(),
         };
 
         var result = await _userManager.CreateAsync(user, registerRequest.Password);
@@ -208,7 +210,7 @@ public class AuthController(SignInManager<User> signInManager, UserManager<User>
 
         // Validate the refresh token
         var storedRefreshToken = await _dbContext.RefreshTokens
-            .FirstOrDefaultAsync(rt => rt.Token == refreshTokenRequest.RefreshToken);
+            .FirstOrDefaultAsync(rt => rt.Token == refreshTokenRequest.RefreshToken && rt.ExpiryDate > DateTime.UtcNow);
         if (storedRefreshToken == null || storedRefreshToken.IsRevoked || storedRefreshToken.ExpiryDate <= DateTime.UtcNow)
         {
             return Unauthorized(new ErrorResponse { Message = "Invalid or expired refresh token." });
@@ -271,12 +273,17 @@ public class AuthController(SignInManager<User> signInManager, UserManager<User>
         }
 
         // Handle JWT token logout
-        user.TokenVersion++;
-        await _userManager.UpdateAsync(user);
+        // user.TokenVersion++;
+        // await _userManager.UpdateAsync(user);
         await _tokenService.RevokeTokens(userId);
         _logger.LogInformation("User {UserId} logged out and tokens invalidated.", userId);
 
-        return NoContent();
+        return Ok(new SuccessResponse
+        {
+            Message = "User logged out successfully.",
+            IsSuccessful = true,
+            StatusCode = "200"
+        });
     }
 
 }
