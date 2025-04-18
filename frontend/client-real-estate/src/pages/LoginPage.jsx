@@ -7,6 +7,11 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { TOAST_OPTIONS } from '../utils/constants';
 import { getAccessToken } from '../utils/token'; // Assuming this function is defined in a separate file
+import DOMPurify from 'dompurify';
+
+const sanitizeInput = (input) => {
+  return DOMPurify.sanitize(input);
+};
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,7 +30,7 @@ const Login = () => {
   }, [navigate]);
 
   const validateInput = (input) => {
-    const regex = /^[a-zA-Z0-9@.]+$/; // Allow only alphanumeric characters, @, and .
+    const regex = /^[a-zA-Z0-9@.!#$%&'*+/=?^_`{|}~-]+$/; // Allow alphanumeric and special characters
     return regex.test(input);
   };
 
@@ -33,7 +38,10 @@ const Login = () => {
     e.preventDefault();
     setError(null);
 
-    if (!validateInput(email) || !validateInput(password)) {
+    const sanitizedEmail = sanitizeInput(email);
+    const sanitizedPassword = sanitizeInput(password);
+
+    if (!validateInput(sanitizedEmail) || !validateInput(sanitizedPassword)) {
       setError('Invalid input detected.');
       toast.error('Invalid input detected.', TOAST_OPTIONS);
       return;
@@ -41,8 +49,8 @@ const Login = () => {
 
     try {
       const loginData = { 
-        email, 
-        password
+        email: sanitizedEmail, 
+        password: sanitizedPassword
       };
 
       const useBearerToken = true; // Always use bearer token
