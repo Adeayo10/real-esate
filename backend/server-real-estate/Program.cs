@@ -132,6 +132,17 @@ builder.Services.AddDbContext<RealEstateDbContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
+builder.Services.AddCors(option =>
+{
+    option.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
