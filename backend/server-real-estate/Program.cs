@@ -89,6 +89,7 @@ builder.Services.AddScoped<IRealEstatateDbContext, RealEstateDbContext>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IListService, ListService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddTransient<IContactService, ContactService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

@@ -12,8 +12,8 @@ public class RealEstateDbContext : IdentityDbContext<User>, IRealEstatateDbConte
     }
 
     public DbSet<Property> Properties { get; set; }
-
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<ContactUs> ContactUs { get; set; } 
+    public DbSet<RefreshToken> RefreshTokens { get; set; }  
     public override DbSet<User> Users { get; set; }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -39,6 +39,10 @@ public class RealEstateDbContext : IdentityDbContext<User>, IRealEstatateDbConte
     modelBuilder.Entity<Property>().ToTable("Properties");
     modelBuilder.Entity<User>().ToTable("Users", "dbo"); // Explicitly map Users to dbo schema
     modelBuilder.Entity<RefreshToken>().ToTable("RefreshTokens", "dbo"); // Explicitly map RefreshTokens to dbo schema
+    modelBuilder.Entity<ContactUs>().ToTable("ContactUs", "dbo"); // Explicitly map ContactUs to dbo schema
+    modelBuilder.Entity<ContactUs>()
+        .Property(c => c.Message)
+        .HasColumnType("xml"); // Set Message field to XML type
 
     // Set default schema
     modelBuilder.HasDefaultSchema("dbo");
@@ -55,6 +59,7 @@ public interface IRealEstatateDbContext
     DbSet<Property> Properties { get; set; }
     DbSet<User> Users { get; set; }
     DbSet<RefreshToken> RefreshTokens { get; set; }
+    DbSet<ContactUs> ContactUs { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     int SaveChanges();
     EntityEntry Entry(object entity);
