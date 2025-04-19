@@ -7,13 +7,12 @@ import ContactPage from './pages/ContactPage';
 import ListingPage from './pages/ListingPage';
 import RegisterPage from './pages/RegisterPage';
 import { renewAuthToken } from './api/auth';
+import './App.css'; 
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import './App.css'; // Assuming you have a CSS file for styling
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const isInitialCheck = useRef(true); // Track initial load
+  const isInitialCheck = useRef(true); 
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -24,23 +23,23 @@ const App = () => {
         try {
           const response = await renewAuthToken({ accessToken, refreshToken: refreshTokenValue });
           localStorage.setItem('accessToken', response.accessToken);
-          if (!isAuthenticated) setIsAuthenticated(true); // Only update if state changes
+          if (!isAuthenticated) setIsAuthenticated(true); 
         } catch (error) {
           console.error('Failed to refresh token:', error);
-          if (isAuthenticated) setIsAuthenticated(false); // Only update if state changes
+          if (isAuthenticated) setIsAuthenticated(false); 
         }
       } else if (accessToken) {
-        if (!isAuthenticated) setIsAuthenticated(true); // Only update if state changes
+        if (!isAuthenticated) setIsAuthenticated(true); 
       } else {
-        if (isAuthenticated) setIsAuthenticated(false); // Only update if state changes
+        if (isAuthenticated) setIsAuthenticated(false); 
       }
     };
 
     if (isInitialCheck.current) {
       checkAuth();
-      isInitialCheck.current = false; // Ensure it only runs once on initial load
+      isInitialCheck.current = false;
     }
-  }, [isAuthenticated]); // Dependency array ensures minimal re-renders
+  }, [isAuthenticated]); 
 
   return (
     <>

@@ -24,7 +24,7 @@ export const storeUserIdFromToken = () => {
   if (decodedToken && decodedToken.sub) {
     localStorage.setItem('userId', decodedToken.sub);
     console.log('User ID stored in localStorage:', decodedToken.sub);
-    return decodedToken.sub; // Return the user ID for further use if needed
+    return decodedToken.sub; 
     
   } else {
     console.error('Failed to decode access token or extract user ID.');
