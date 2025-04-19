@@ -139,6 +139,36 @@ public class ListService : IListService
             return Result<List<Property>>.Fail($"Error sorting properties: {ex.Message}");
         }
     }
+    public async Task<Result<List<Property>>> SearchByType(string Type)
+    {
+        try{
+            var properties = await _context.Properties.Where(p=>p.HouseType==Type).ToListAsync();
+            if(properties==null)
+            {
+                return Result<List<Property>>.Fail("No Properties Found");
+            }
+            return Result<List<Property>>.Ok(properties,"Properties retrieved successfully.");
+        }
+        catch(Exception ex)
+        {
+            return Result<List<Property>>.Fail($"Error searching properties by type: {ex.Message}");
+        }
+    }
+    public async Task<Result<List<Property>>> FilterProperty(string type,string mode)
+    {
+        try{
+            var properties = await _context.Properties.Where(p=>p.HouseType==type && p.Mode==mode).ToListAsync();
+            if(!properties.Any())
+            {
+                return Result<List<Property>>.Fail("No properties found");
+            }
+            return Result<List<Property>>.Ok(properties,"Properties retrieved successfully");
+        }
+        catch(Exception ex)
+        {
+            return Result<List<Property>>.Fail($"Error filtering properties: {ex.Message}");
+        }
+    }
 }
 
 
@@ -151,4 +181,6 @@ public interface IListService
     Task<Result<bool>> DeletePropertyAsync(int id);
     Task<Result<List<Property>>> SearchPropertyAsync(string searchTerm);
     Task<Result<List<Property>>> sortProperty(string sortValue);
+    Task<Result<List<Property>>> SearchByType(string Type);
+    Task<Result<List<Property>>> FilterProperty(string type,string mode);
 }
