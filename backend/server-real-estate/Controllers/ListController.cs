@@ -143,7 +143,7 @@ public class ListController : ControllerBase
         }
     }
 
-    [HttpGet("fileterproperty")]
+    [HttpGet("filterproperty")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<Property>>> FilterProperty(string type,string mode)
