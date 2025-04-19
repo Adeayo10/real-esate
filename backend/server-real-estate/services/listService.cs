@@ -166,7 +166,7 @@ public class ListService : IListService
         }
         catch(Exception ex)
         {
-            return Result<List<Property>>.Fail($"Error sorting properties: {ex.Message}");
+            return Result<List<Property>>.Fail($"Error filtering properties: {ex.Message}");
         }
     }
 }
