@@ -1,41 +1,79 @@
 import React, { useEffect, useState } from 'react';
-import { getAccessToken,getUserNameFromToken,isTokenValid, startTokenRefresh, stopTokenRefresh } from '../utils/token'; // Assuming these functions are defined in a separate file
-import { logoutUser } from '../api/auth'; // Assuming this function is defined in a separate file
+import { getAccessToken, getUserNameFromToken, isTokenValid, startTokenRefresh, stopTokenRefresh } from '../utils/token';
+import { logoutUser } from '../api/auth';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { TOAST_OPTIONS } from '../utils/constants';
-import { storeUserIdFromToken } from '../utils/constants';
+import { TOAST_OPTIONS, storeUserIdFromToken } from '../utils/constants';
 import property1 from '../assets/property1.jpg';
 import property2 from '../assets/property2.jpg';
 import property3 from '../assets/property3.jpg';
 import { Link, useNavigate } from 'react-router-dom';
-import '../App.css'; // Assuming you have a CSS file for styling
-
+import '../App.css';
 
 function HomePage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const fetchProperties = async () => {
+    try {
+        let response;
+        if (searchTerm.trim() === '') {
+            response = await axios.get('/api/list', {
+                params: { transactionType,
+                  propertyType,
+                  keyword: searchKeyword,}
+            });
+        } else {
+            response = await axios.get('/api/list/search', {
+                params: { search: searchTerm }
+            });
+        }
 
+        let data = response.data.data || response.data;
+        console.log("Fetched data from backend:", data);
+        
+        data = data.map(property => ({
+            ...property,
+            price: Number(property.price)
+        }));
+
+        console.log("Mapped property data:", data);
+        if (selectedType !== 'all') {
+            data = data.filter(p => p.type?.toLowerCase() === selectedType);
+        }
+
+        
+        sortProperties(data);
+
+        setProperties(data);
+        setFilteredProperties(data);
+
+        const total = data.length;
+        setTotalPages(Math.ceil(total / pageSize)); 
+    } catch (error) {
+        console.error("Failed to fetch properties", error);
+    }
+};
   useEffect(() => {
     const accessToken = getAccessToken();
     if (!accessToken) {
-      console.warn('Access token not found in localStorage. User is browsing as a guest.');
+      console.warn('Access token not found. Guest mode.');
       setIsLoggedIn(false);
+      setLoading(false);
       return;
     }
-    setIsLoggedIn(true);
 
-    if (accessToken) {
-      startTokenRefresh();
-    }
+    setIsLoggedIn(true);
+    startTokenRefresh();
 
     const user = getUserNameFromToken();
     if (user) {
-      console.log('User name from token:', user);
       setUserName(user);
     }
+
+    setLoading(false);
 
     return () => {
       stopTokenRefresh();
@@ -44,28 +82,28 @@ function HomePage() {
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    const userId = storeUserIdFromToken() // Assuming userId is stored in localStorage
-    const accessToken = getAccessToken(); // Function to get the access token from local storage or cookies
-    
+    const userId = storeUserIdFromToken();
+    const accessToken = getAccessToken();
+
     if (!isTokenValid(accessToken)) {
       toast.error('Session expired. Please log in again.');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+      localStorage.clear();
       window.location.href = '/login';
       return;
     }
 
     try {
-      console.log('Logging out user with ID:', userId);
-      await logoutUser(userId, false); // Call logoutUser with userId and useCookies=false
+      await logoutUser(userId, false);
       toast.success('Logged out successfully.', TOAST_OPTIONS);
-      localStorage.removeItem('user');
+      localStorage.clear();
       navigate('/login');
     } catch (error) {
       toast.error('Error logging out. Please try again.', TOAST_OPTIONS);
       console.error('Logout error:', error);
     }
   };
+
+  if (loading) return <div className="loader">Loading...</div>;
 
   return (
     <div className="landing-container">
@@ -83,7 +121,7 @@ function HomePage() {
                 className="user-name"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-               Hello! {userName} ▼
+                Hello! {userName} ▼
               </span>
               {isDropdownOpen && (
                 <div className="dropdown-menu">
@@ -108,11 +146,11 @@ function HomePage() {
             <option>Villa</option>
           </select>
           <input type="text" placeholder="Search..." />
-          <button>Search</button>
+          <button onClick={() => navigate('/listings')}>Search</button>
         </div>
       </header>
       <section className="listings">
-        <h2 style={{ marginBottom: '10px' }}>Explore Available Listings</h2>
+        <h2 style={{ marginTop: 25 }}>Explore Available Listings</h2>
         <div className="listing-cards">
           <div className="card">
             <img src={property1} alt="Dublin Apartment" />
@@ -129,24 +167,14 @@ function HomePage() {
             <h3>2 BHK Apartment in Galway</h3>
             <p>$150,000</p>
           </div>
-          <div className="card">
-            <img src={property3} alt="Galway Apartment" />
-            <h3>2 BHK Apartment in Galway</h3>
-            <p>$150,000</p>
-          </div>
         </div>
-        <Link to="/property-listing">
-          <button className="buttonpadding">See more...</button>
-        </Link>
-      </section>
-      <section className="about">
-        <h2>About Us</h2>
-        <p>
-          Welcome to our real estate platform, where we connect buyers, sellers, and investors with the finest properties in the market. Whether you're looking for a cozy apartment, a luxurious villa, or a commercial space, we provide a seamless experience with expert guidance at every step. Our commitment to transparency, reliability, and customer satisfaction ensures that you find the perfect property that suits your needs and budget. Explore our listings and let us help you turn your real estate dreams into reality!
-        </p>
+        <Link to="/listings">
+  <button className="buttonpadding">See more...</button>
+</Link>
+
       </section>
       <section className="propertyType">
-        <h2 style={{marginBottom:10}}>Find Your Perfect Property Type</h2>
+        <h2 style={{ marginTop: 25 }}>Find Your Perfect Property Type</h2>
         <div className="listing-cards">
           <button className="card touch-card">
             <img src={property1} alt="Town House" />

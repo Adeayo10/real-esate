@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Auth.css";
-localStorage.setItem("loggedInUser", JSON.stringify({ firstName: "Javeed" })); // Use real name in signup
+localStorage.setItem("loggedInUser", JSON.stringify({ firstName: "Javeed" })); 
 localStorage.setItem("isLoggedIn", true);
 
 const Signup = () => {
