@@ -127,4 +127,34 @@ public class ListController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
+    [HttpGet("searchbytype")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<Property>>> SearchByType(string Type)
+    {
+        try{
+            var properties = await _listService.SearchByType(Type);
+            return Ok(properties);
+        }
+        catch(Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpGet("fileterproperty")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<Property>>> FilterProperty(string type,string mode)
+    {
+        try{
+            var properties = await _listService.FilterProperty(type,mode);
+            return Ok(properties);
+        }
+        catch(Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 }
