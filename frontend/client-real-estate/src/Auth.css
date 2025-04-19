@@ -1,4 +1,4 @@
-/* Updated styling for authentication pages to align with the application's theme */
+
 body {
   margin: 0;
   padding: 0;
@@ -58,6 +58,26 @@ body {
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   outline: none;
 }
+.auth-form .remember-me {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.auth-form .remember-me input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #007bff;
+  margin-top: 15px;
+}
+
+
 
 .auth-form button {
   padding: 12px;
@@ -91,6 +111,35 @@ body {
 .auth-toggle a:hover {
   text-decoration: underline;
 }
+button:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ffffff;
+  border-top: 2px solid rgba(0, 123, 255, 0.8);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: #fff;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 
 @media (max-width: 768px) {
   .auth-container {

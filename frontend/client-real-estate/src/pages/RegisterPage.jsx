@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { registerUser } from '../api/auth';
-import { startTokenRefresh } from '../utils/token'; // Assuming this function is defined in a separate file
+import { startTokenRefresh } from '../utils/token'; 
 import '../Auth.css';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -48,18 +48,17 @@ const Register = () => {
       toast.success(response.message || "Registration successful", TOAST_OPTIONS);
 
       
-      // Send SMS notification
-      // Ensure phoneNumber is in the correct format before sending SMS
+      
       
       if (formData.phoneNumber) {
-       // let phoneNumber =  formatPhoneNumber(formData.phoneNumber);
+       
        console.log('Sending SMS to:', formData.phoneNumber); 
        let response = await sendSMS(formData.phoneNumber, 'Welcome to Real Estate! Your registration was successful.');
         toast.success(response.message || "SMS sent successfully", TOAST_OPTIONS);
         console.log('SMS sent successfully:', response);
       }
 
-      startTokenRefresh(); // Start token refresh after successful registration
+      startTokenRefresh(); 
       navigate('/login');
     } catch (err) {
       setError(err.message || 'An error occurred');

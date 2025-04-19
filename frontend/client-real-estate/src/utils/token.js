@@ -1,28 +1,23 @@
 import { jwtDecode } from "jwt-decode";
 import { logoutUser } from "../api/auth";
-import { renewAuthToken } from "../api/auth"; // Assuming you have a function to renew the token
+import { renewAuthToken } from "../api/auth";
 
-// Function to set the access token in localStorage
 export const setAccessToken = (token) => {
   localStorage.setItem("accessToken", token);
 };
 
-// Function to get the access token from localStorage
 export const getAccessToken = () => {
-  return localStorage.getItem("accessToken");
-};
-
-// Function to get the refresh token from localStorage
+    return localStorage.getItem("accessToken");
+  };
+  
 export const getRefreshToken = () => {
   return localStorage.getItem("refreshToken");
 };
 
-// Function to set the refresh token in localStorage
 export const setRefreshToken = (token) => {
   localStorage.setItem("refreshToken", token);
 };
 
-// Function to decode the access token and check expiry
 export const decodeAccessToken = (token) => {
   try {
     const decoded = jwtDecode(token);
@@ -33,7 +28,6 @@ export const decodeAccessToken = (token) => {
   }
 };
 
-// Function to refresh tokens a minute before expiry
 export const monitorTokenExpiry = async () => {
   const accessToken = getAccessToken();
   const refreshToken = getRefreshToken();
@@ -51,11 +45,10 @@ export const monitorTokenExpiry = async () => {
     return;
   }
 
-  const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+  const currentTime = Math.floor(Date.now() / 1000); 
   const timeToExpiry = decodedAccessToken.exp - currentTime;
 
   if (timeToExpiry <= 60) {
-    // If less than or equal to 1 minute
     try {
       const response = await renewAuthToken({ accessToken, refreshToken });
       localStorage.setItem("accessToken", response.token);
@@ -74,8 +67,8 @@ export const isTokenValid = (token) => {
   const decodedToken = decodeAccessToken(token);
   if (!decodedToken || !decodedToken.exp) return false;
 
-  const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-  return decodedToken.exp > currentTime; // Token is valid if expiration time is in the future
+  const currentTime = Math.floor(Date.now() / 1000); 
+  return decodedToken.exp > currentTime; 
 };
 
 let refreshInterval = null;
@@ -88,7 +81,7 @@ export const startTokenRefresh = () => {
     return;
   }
 
-  // Set interval to refresh the access token every 4 minutes
+  
   refreshInterval = setInterval(async () => {
     try {
       const response = await renewAuthToken({
@@ -121,7 +114,7 @@ export const getUserNameFromToken = () => {
 
   const decodedToken = decodeAccessToken(accessToken);
   if (decodedToken && decodedToken.name) {
-    return decodedToken.name; // Return the user name for further use if needed
+    return decodedToken.name;
   } else {
     console.error("Failed to decode access token or extract user name.");
     return null;

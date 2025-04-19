@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { loginUser } from '../api/auth';
-import { startTokenRefresh } from '../utils/token'; // Assuming this function is defined in a separate file
+import { startTokenRefresh, getAccessToken } from '../utils/token';
 import '../Auth.css';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { TOAST_OPTIONS } from '../utils/constants';
-import { getAccessToken } from '../utils/token'; // Assuming this function is defined in a separate file
 import DOMPurify from 'dompurify';
 
 const sanitizeInput = (input) => {
@@ -19,24 +18,24 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const accessToken = getAccessToken();
     if (accessToken) {
-      console.warn('Access token found in localStorage. Redirecting to home.');
       navigate('/');
-      return;
     }
   }, [navigate]);
 
   const validateInput = (input) => {
-    const regex = /^[a-zA-Z0-9@.!#$%&'*+/=?^_`{|}~-]+$/; // Allow alphanumeric and special characters
+    const regex = /^[a-zA-Z0-9@.!#$%&'*+/=?^_`{|}~-]+$/;
     return regex.test(input);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     const sanitizedEmail = sanitizeInput(email);
     const sanitizedPassword = sanitizeInput(password);
@@ -44,27 +43,24 @@ const Login = () => {
     if (!validateInput(sanitizedEmail) || !validateInput(sanitizedPassword)) {
       setError('Invalid input detected.');
       toast.error('Invalid input detected.', TOAST_OPTIONS);
+      setLoading(false);
       return;
     }
 
     try {
-      const loginData = { 
-        email: sanitizedEmail, 
-        password: sanitizedPassword
-      };
+      const loginData = { email: sanitizedEmail, password: sanitizedPassword };
+      const response = await loginUser({ ...loginData, useBearerToken: true });
 
-      const useBearerToken = true; // Always use bearer token
-      const response = await loginUser({ ...loginData, useBearerToken });
-      console.log('Login successful:', response);
-      toast.success(`${response.message} Welcome`, TOAST_OPTIONS);
-      startTokenRefresh(); // Start token refresh after successful login
-      
+      toast.success(response.message || 'Login successful!', TOAST_OPTIONS);
+      startTokenRefresh();
+
       setTimeout(() => {
-        navigate('/'); // Redirect to home page after 2 seconds
-      }, 5000); // Adjust the delay as needed
+        navigate('/');
+      }, 500); 
     } catch (err) {
       setError(err.message || 'An error occurred');
       toast.error(err.message || 'An error occurred!', TOAST_OPTIONS);
+      setLoading(false);
     }
   };
 
@@ -74,6 +70,7 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="auth-form">
           <h2>Login</h2>
           {error && <p className="error">{error}</p>}
+
           <label>Email:</label>
           <input
             type="email"
@@ -81,6 +78,7 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+
           <label>Password:</label>
           <input
             type="password"
@@ -88,15 +86,27 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <label>
+
+          <label className="remember-me">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
             />
-            Remember Me
+            <span>Remember Me</span>
           </label>
-          <button type="submit">Login</button>
+
+          <button type="submit" disabled={loading}>
+            {loading ? (
+              <div className="spinner-container">
+                <div className="spinner"></div>
+                <span className="loading-text">Logging in...</span>
+              </div>
+            ) : (
+              'Login'
+            )}
+          </button>
+
           <div className="auth-toggle">
             <p>Don't have an account? <a href="/register">Register here</a></p>
           </div>
