@@ -1,19 +1,20 @@
-
 html, body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    background: linear-gradient(to right, #4facfe, #00f2fe);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
-  }
-  
+    background: linear-gradient(to right, #4facfe, #00f2fe) !important; /* Using !important */
+}
+
 .property-list-container {
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
+
 .top-controls {
     display: flex;
     justify-content: center;
@@ -24,14 +25,14 @@ html, body {
     padding: 20px;
     width: 100%;
     max-width: 1400px;
-    gap: 30px;
+    gap: 15px; /* Reduced the gap for better alignment */
 }
 
 .sort-option, .filter-option, .search-bar2 {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 33%;
+    width: 28%; 
 }
 
 h4 {
@@ -55,27 +56,28 @@ input[type="text"], select {
     outline: none;
     width: 100%;
 }
+
 .property-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Slightly wider cards */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
     gap: 24px;
     width: 100%;
     max-width: 1400px;
 }
+
 .property-details {
     padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 6px;
-  }
-  
-  .property-details p {
+}
+
+.property-details p {
     margin: 0;
     color: #333;
     font-size: 14px;
     line-height: 1.4;
-  }
-  
+}
 
 .property-card {
     background-color: white;
@@ -88,6 +90,7 @@ input[type="text"], select {
     height: 200px;
     object-fit: cover;
 }
+
 .pagination {
     display: flex;
     justify-content: center;
@@ -111,6 +114,20 @@ input[type="text"], select {
 .pagination button:disabled {
     background-color: #ddd;
     cursor: not-allowed;
+}
+.sort-option h4 {
+    margin-bottom: 8px;
+}
+
+.price-sort-options {
+    display: flex;
+    gap: 15px;
+}
+
+.price-sort-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 @media (max-width: 768px) {

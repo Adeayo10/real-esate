@@ -46,9 +46,9 @@ function AboutUsPage() {
           </div>
           <div className="team-member">
            
-            <h3>Bincy</h3>
+            <h3>Bincyto</h3>
             <p>Software Architect</p>
-            <p>Bincy is the visionary behind our software architecture, crafting robust and scalable solutions that drive performance, reliability, and future growth.</p>
+            <p>Bincyto is the visionary behind our software architecture, crafting robust and scalable solutions that drive performance, reliability, and future growth.</p>
           </div>
         </div>
       </section>

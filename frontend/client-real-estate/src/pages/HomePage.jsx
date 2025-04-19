@@ -9,57 +9,41 @@ import property2 from '../assets/property2.jpg';
 import property3 from '../assets/property3.jpg';
 import { Link, useNavigate } from 'react-router-dom';
 import '../App.css';
+import axios from 'axios';
 
 function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [transactionType, setTransactionType] = useState('buy');
+  const [propertyType, setPropertyType] = useState('home');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const navigate = useNavigate();
-  const fetchProperties = async () => {
+
+  const handleSearch = async () => {
     try {
-        let response;
-        if (searchTerm.trim() === '') {
-            response = await axios.get('/api/list', {
-                params: { transactionType,
-                  propertyType,
-                  keyword: searchKeyword,}
-            });
-        } else {
-            response = await axios.get('/api/list/search', {
-                params: { search: searchTerm }
-            });
+      const response = await axios.get('/api/list/filterproperty', {
+        params: {
+          mode: transactionType,
+          type: propertyType,
         }
+      });
 
-        let data = response.data.data || response.data;
-        console.log("Fetched data from backend:", data);
-        
-        data = data.map(property => ({
-            ...property,
-            price: Number(property.price)
-        }));
-
-        console.log("Mapped property data:", data);
-        if (selectedType !== 'all') {
-            data = data.filter(p => p.type?.toLowerCase() === selectedType);
-        }
-
-        
-        sortProperties(data);
-
-        setProperties(data);
-        setFilteredProperties(data);
-
-        const total = data.length;
-        setTotalPages(Math.ceil(total / pageSize)); 
+      const data = response.data.data || [];
+      console.log("Filtered properties:", data);
+      
+      
+      navigate('/listings', { state: { filteredProperties: data, showAllButton: true } });
     } catch (error) {
-        console.error("Failed to fetch properties", error);
+      console.error("Error fetching filtered properties:", error.response?.data || error);
+      toast.error('Error fetching properties. Please check your input.', TOAST_OPTIONS);
     }
-};
+  };
+
   useEffect(() => {
     const accessToken = getAccessToken();
     if (!accessToken) {
-      console.warn('Access token not found. Guest mode.');
       setIsLoggedIn(false);
       setLoading(false);
       return;
@@ -69,15 +53,10 @@ function HomePage() {
     startTokenRefresh();
 
     const user = getUserNameFromToken();
-    if (user) {
-      setUserName(user);
-    }
-
+    if (user) setUserName(user);
     setLoading(false);
 
-    return () => {
-      stopTokenRefresh();
-    };
+    return () => stopTokenRefresh();
   }, []);
 
   const handleLogout = async (e) => {
@@ -117,10 +96,7 @@ function HomePage() {
           {!isLoggedIn && <li><a href="/login">Login</a></li>}
           {isLoggedIn && (
             <div className="user-menu">
-              <span
-                className="user-name"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
+              <span className="user-name" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
                 Hello! {userName} ▼
               </span>
               {isDropdownOpen && (
@@ -132,23 +108,30 @@ function HomePage() {
           )}
         </ul>
       </nav>
+
       <header className="hero">
         <h1>Find Your Dream Home Today!</h1>
         <p>Browse thousands of properties with ease.</p>
         <div className="search-bar">
-          <select>
-            <option>Buy</option>
-            <option>Rent</option>
+          <select value={transactionType} onChange={(e) => setTransactionType(e.target.value)}>
+            <option value="buy">Buy</option>
+            <option value="rent">Rent</option>
           </select>
-          <select>
-            <option>Home</option>
-            <option>Apartment</option>
-            <option>Villa</option>
+          <select value={propertyType} onChange={(e) => setPropertyType(e.target.value)}>
+            <option value="home">Home</option>
+            <option value="apartment">Apartment</option>
+            <option value="villa">Villa</option>
           </select>
-          <input type="text" placeholder="Search..." />
-          <button onClick={() => navigate('/listings')}>Search</button>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          />
+          <button onClick={handleSearch}>Search</button>
         </div>
       </header>
+
       <section className="listings">
         <h2 style={{ marginTop: 25 }}>Explore Available Listings</h2>
         <div className="listing-cards">
@@ -169,11 +152,11 @@ function HomePage() {
           </div>
         </div>
         <Link to="/listings">
-  <button className="buttonpadding">See more...</button>
-</Link>
-
+          <button className="buttonpadding">See more...</button>
+        </Link>
       </section>
-      <section className="propertyType">
+
+      {/* <section className="propertyType">
         <h2 style={{ marginTop: 25 }}>Find Your Perfect Property Type</h2>
         <div className="listing-cards">
           <button className="card touch-card">
@@ -189,32 +172,29 @@ function HomePage() {
             <h3>Villas</h3>
           </button>
         </div>
-      </section>
+      </section> */}
+
       <section className="reviews">
         <h2 style={{ marginBottom: '10px' }}>What Our Happy Clients Say</h2>
         <div className="review-cards">
-          <div className="reviewCard">
-            <div className="review-profile"></div>
-            <p>"Amazing experience! Found my dream home within a week. Highly recommended!"</p>
-            <h4>- Sarah M.</h4>
-          </div>
-          <div className="reviewCard">
-            <div className="review-profile"></div>
-            <p>"Very professional team and a wide variety of listings. Loved the smooth process."</p>
-            <h4>- James T.</h4>
-          </div>
-          <div className="reviewCard">
-            <div className="review-profile"></div>
-            <p>"A fantastic platform that helped me sell my house quickly and easily!"</p>
-            <h4>- Priya R.</h4>
-          </div>
-          <div className="reviewCard">
-            <div className="review-profile"></div>
-            <p>"They truly care about customer satisfaction. I felt guided every step of the way."</p>
-            <h4>- Mark D.</h4>
-          </div>
+          {[ 
+            { name: 'Sarah M.', text: 'Amazing experience! Found my dream home within a week. Highly recommended!' },
+            { name: 'James T.', text: 'Very professional team and a wide variety of listings. Loved the smooth process.' },
+            { name: 'Priya R.', text: 'A fantastic platform that helped me sell my house quickly and easily!' },
+            { name: 'Mark D.', text: 'They truly care about customer satisfaction. I felt guided every step of the way.' },
+            { name: 'Emily S.', text: 'Easy-to-use platform and wonderful customer support. Would use again!' },
+            { name: 'Liam B.', text: 'Quick, smooth, and transparent property dealings. Impressive service!' }
+          ].map((review, index) => (
+            <div className="reviewCard" key={index}>
+              <div className="review-profile"></div>
+              <p>"{review.text}"</p>
+              <h4>- {review.name}</h4>
+            </div>
+          ))}
         </div>
+        <p className="scroll-hint">Scroll to view more →</p>
       </section>
+
       <footer className="footer">
         <p>© 2025 Property Listing. All rights reserved.</p>
         <div className="footer-links">

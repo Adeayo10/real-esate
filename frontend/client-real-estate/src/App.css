@@ -142,16 +142,39 @@ h4::after { width: 50px; }
 .review-cards {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: center; 
+  justify-content: flex-start; 
   gap: 20px;
-  padding: 20px;
+  padding: 20px 20px 40px 20px; 
   margin: 0 auto;
   max-width: 1200px;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--primary-color) var(--light-gray);
+  position: relative;
+  scroll-padding-left: 20px;
 }
 
+.scroll-hint {
+  text-align: center;
+  color: white;
+  font-weight: bold;
+
+}
+.review-section {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 20px;
+}
+
+.review-cards::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 40px;
+  pointer-events: none;
+}
 
 .card,
 .reviewCard {
