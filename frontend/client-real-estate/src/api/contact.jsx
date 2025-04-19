@@ -1,4 +1,4 @@
-const API_URL = "/api/Contact/contact-us";
+const API_URL = "/api/Contact/";
 
 export const createContactUs = async (contactData) => {
   try {
