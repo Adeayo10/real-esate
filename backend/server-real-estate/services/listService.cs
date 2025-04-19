@@ -158,7 +158,7 @@ public class ListService : IListService
     {
         try{
             var properties = await _context.Properties.Where(p=>p.HouseType==type && p.Mode==mode).ToListAsync();
-            if(properties==null)
+            if(!properties.Any())
             {
                 return Result<List<Property>>.Fail("No properties found");
             }
