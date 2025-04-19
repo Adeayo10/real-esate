@@ -18,7 +18,7 @@ public class ContactService(IRealEstatateDbContext context) : IContactService
             return Result<string>.Fail("Contact request is null");
         }
 
-        //mapp the request to the entity
+        //map the request to the entity
         var contactUs = new ContactUs
         {
             Id = Guid.NewGuid(),
