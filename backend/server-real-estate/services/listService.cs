@@ -151,7 +151,7 @@ public class ListService : IListService
         }
         catch(Exception ex)
         {
-            return Result<List<Property>>.Fail($"Error sorting properties: {ex.Message}");
+            return Result<List<Property>>.Fail($"Error searching properties by type: {ex.Message}");
         }
     }
     public async Task<Result<List<Property>>> FilterProperty(string type,string mode)
