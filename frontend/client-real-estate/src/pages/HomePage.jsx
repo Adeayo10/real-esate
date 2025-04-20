@@ -16,46 +16,6 @@ function HomePage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const fetchProperties = async () => {
-    try {
-        let response;
-        if (searchTerm.trim() === '') {
-            response = await axios.get('/api/list', {
-                params: { transactionType,
-                  propertyType,
-                  keyword: searchKeyword,}
-            });
-        } else {
-            response = await axios.get('/api/list/search', {
-                params: { search: searchTerm }
-            });
-        }
-
-        let data = response.data.data || response.data;
-        console.log("Fetched data from backend:", data);
-        
-        data = data.map(property => ({
-            ...property,
-            price: Number(property.price)
-        }));
-
-        console.log("Mapped property data:", data);
-        if (selectedType !== 'all') {
-            data = data.filter(p => p.type?.toLowerCase() === selectedType);
-        }
-
-        
-        sortProperties(data);
-
-        setProperties(data);
-        setFilteredProperties(data);
-
-        const total = data.length;
-        setTotalPages(Math.ceil(total / pageSize)); 
-    } catch (error) {
-        console.error("Failed to fetch properties", error);
-    }
-};
   useEffect(() => {
     const accessToken = getAccessToken();
     if (!accessToken) {
